@@ -49,7 +49,7 @@ const DoctorRegistration = () => {
 
   const sendOtpToEmail = async () => {
   try {
-    const response = await fetch('http://localhost:5000/send-otp', {
+    const response = await fetch('${process.env.REACT_APP_API_BASE_URL}/send-otp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const DoctorRegistration = () => {
 
   // Step 1: Check if email is already registered
   try {
-    const response = await fetch('http://localhost:5000/check-email', {
+    const response = await fetch('${process.env.REACT_APP_API_BASE_URL}/check-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ const DoctorRegistration = () => {
   e.preventDefault();
 
   try {
-    const response = await fetch('http://localhost:5000/verify-otp', {
+    const response = await fetch('${process.env.REACT_APP_API_BASE_URL}/verify-otp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

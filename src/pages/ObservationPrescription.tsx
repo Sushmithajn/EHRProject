@@ -39,7 +39,7 @@ const ObservationPrescription = () => {
   useEffect(() => {
     const fetchOPDDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/opd`);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/opd`);
         const matched = res.data.find((entry: any) => entry.patientId === patientId);
         if (matched) setOpd(matched);
       } catch (err) {
@@ -50,7 +50,7 @@ const ObservationPrescription = () => {
     const fetchPrescriptionHistory = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/observations?patientId=${patientId}`
+          `${process.env.REACT_APP_API_BASE_URL}/api/observations?patientId=${patientId}`
         );
         setPrescriptionHistory(res.data);
       } catch (err) {
@@ -96,10 +96,10 @@ const ObservationPrescription = () => {
     };
 
     try {
-      await axios.post('http://localhost:5000/api/observations', newObservation);
+      await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/observations', newObservation);
       setSuccess(true);
       const historyRes = await axios.get(
-        `http://localhost:5000/api/observations?patientId=${opd.patientId}`
+        `${process.env.REACT_APP_API_BASE_URL}/api/observations?patientId=${opd.patientId}`
       );
       setPrescriptionHistory(historyRes.data);
       setTimeout(() => setSuccess(false), 3000);
@@ -247,7 +247,7 @@ const ObservationPrescription = () => {
         if (medNames.length) form.append('extraKeywords', JSON.stringify(medNames));
 
         try {
-          const resp = await axios.post('http://localhost:5000/api/deepgram/transcribe-medical', form, {
+          const resp = await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/deepgram/transcribe-medical', form, {
             headers: { 'Content-Type': 'multipart/form-data' },
           });
           const transcript: string = resp.data.transcript || '';

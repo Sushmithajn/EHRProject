@@ -55,7 +55,7 @@ const PatientRegistration = () => {
 
   const sendOTP = async () => {
   try {
-    const res = await fetch('http://localhost:5000/send-phone-otp', {
+    const res = await fetch('${process.env.REACT_APP_API_BASE_URL}/send-phone-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone: formData.phoneNumber }),
@@ -74,7 +74,7 @@ const PatientRegistration = () => {
 
 const verifyOTP = async () => {
   try {
-    const res = await fetch('http://localhost:5000/verify-phone-otp', {
+    const res = await fetch('${process.env.REACT_APP_API_BASE_URL}/verify-phone-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone: formData.phoneNumber, otp }),
@@ -102,7 +102,7 @@ const verifyOTP = async () => {
   }
 
   try {
-    const response = await fetch('http://localhost:5000/register-patient', {
+    const response = await fetch('${process.env.REACT_APP_API_BASE_URL}/register-patient', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
