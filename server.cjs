@@ -580,6 +580,10 @@ app.post('/api/deepgram/transcribe-medical', upload.single('audio'), async (req,
 });
 
 
+app.get('/', (req, res) => {
+  res.send('EHR backend is running 🎉');
+});
+
 
 
 
