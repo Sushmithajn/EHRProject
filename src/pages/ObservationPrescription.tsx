@@ -96,7 +96,7 @@ const ObservationPrescription = () => {
     };
 
     try {
-      await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/observations', newObservation);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/observations`, newObservation);
       setSuccess(true);
       const historyRes = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/api/observations?patientId=${opd.patientId}`
@@ -247,7 +247,7 @@ const ObservationPrescription = () => {
         if (medNames.length) form.append('extraKeywords', JSON.stringify(medNames));
 
         try {
-          const resp = await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/deepgram/transcribe-medical', form, {
+          const resp = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/deepgram/transcribe-medical`, form, {
             headers: { 'Content-Type': 'multipart/form-data' },
           });
           const transcript: string = resp.data.transcript || '';

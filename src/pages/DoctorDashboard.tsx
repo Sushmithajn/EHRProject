@@ -11,7 +11,7 @@ const DoctorDashboard = () => {
     const fetchOPDDetails = async () => {
       try {
         // Fetch OPD details (with embedded patient info)
-        const opdDetailsRes = await fetch('${process.env.REACT_APP_API_BASE_URL}/opd-details');
+        const opdDetailsRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/opd-details`);
         const opdDetailsDataRaw = await opdDetailsRes.json();
 
         // Normalize if needed (make sure each entry has an 'id' for React keys)

@@ -58,7 +58,7 @@ const OPDForm = () => {
       }
       setLoadingTaken(true);
       try {
-        const resp = await axios.get('${process.env.REACT_APP_API_BASE_URL}/api/opd', {
+        const resp = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/opd`, {
           params: { date, department }
         });
         const slots: string[] = resp.data
@@ -116,7 +116,7 @@ const OPDForm = () => {
     };
 
     try {
-      await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/opd', opdEntry);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/opd`, opdEntry);
       dispatch({ type: 'ADD_OPD_ENTRY', payload: opdEntry });
 
       alert(`OPD Registration Successful!

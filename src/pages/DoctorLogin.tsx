@@ -26,7 +26,7 @@ const DoctorLogin = () => {
   setError('');
 
   try {
-    const res = await fetch('${process.env.REACT_APP_API_BASE_URL}/doctor-login', {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/doctor-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
