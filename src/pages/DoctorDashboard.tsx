@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { LogOut, Clock, User, UserCheck } from 'lucide-react';
 import { useHealthcare } from '../context/HealthcareContext';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 const DoctorDashboard = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useHealthcare();
@@ -11,7 +14,7 @@ const DoctorDashboard = () => {
     const fetchOPDDetails = async () => {
       try {
         // Fetch OPD details (with embedded patient info)
-        const opdDetailsRes = await fetch('http://localhost:5000/opd-details');
+        const opdDetailsRes = await fetch(`${API_URL}/opd-details`);
         const opdDetailsDataRaw = await opdDetailsRes.json();
 
         // Normalize if needed (make sure each entry has an 'id' for React keys)

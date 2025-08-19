@@ -6,6 +6,8 @@ import axios from 'axios';
 import { v4 as uuid } from 'uuid'; // ✅ Added UUID
 import { Patient } from '../context/HealthcareContext'; // ✅ Import Patient interface
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const OPDForm = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useHealthcare();
@@ -36,7 +38,7 @@ const OPDForm = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/patient/${patientId.trim()}`);
+      const response = await fetch(`${API_URL}/patient/${patientId.trim()}`);
       if (!response.ok) throw new Error('Patient not found');
 
       const data = await response.json();
@@ -58,7 +60,7 @@ const OPDForm = () => {
       }
       setLoadingTaken(true);
       try {
-        const resp = await axios.get('http://localhost:5000/api/opd', {
+        const resp = await axios.get(`${API_URL}/api/opd`, {
           params: { date, department }
         });
         const slots: string[] = resp.data
@@ -116,7 +118,7 @@ const OPDForm = () => {
     };
 
     try {
-      await axios.post('http://localhost:5000/api/opd', opdEntry);
+      await axios.post(`${API_URL}/api/opd`, opdEntry);
       dispatch({ type: 'ADD_OPD_ENTRY', payload: opdEntry });
 
       alert(`OPD Registration Successful!

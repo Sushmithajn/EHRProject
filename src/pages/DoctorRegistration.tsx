@@ -6,6 +6,9 @@ import {
 } from 'lucide-react';
 import { useHealthcare } from '../context/HealthcareContext';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 const DoctorRegistration = () => {
   const navigate = useNavigate();
   const { dispatch } = useHealthcare();
@@ -49,7 +52,7 @@ const DoctorRegistration = () => {
 
   const sendOtpToEmail = async () => {
   try {
-    const response = await fetch('http://localhost:5000/send-otp', {
+    const response = await fetch(`${API_URL}/send-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +84,7 @@ const DoctorRegistration = () => {
 
   // Step 1: Check if email is already registered
   try {
-    const response = await fetch('http://localhost:5000/check-email', {
+    const response = await fetch(`${API_URL}/check-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +114,7 @@ const DoctorRegistration = () => {
   e.preventDefault();
 
   try {
-    const response = await fetch('http://localhost:5000/verify-otp', {
+    const response = await fetch(`${API_URL}/verify-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

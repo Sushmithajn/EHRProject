@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MailCheck, ArrowLeft } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const DoctorForgotPassword: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
@@ -16,7 +18,7 @@ const DoctorForgotPassword: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/doctor-forgot-password', {
+      const res = await fetch(`${API_URL}/doctor-forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

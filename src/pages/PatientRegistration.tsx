@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Phone, Calendar, CameraIcon, Upload, CreditCard, MapPin } from 'lucide-react';
 import { useHealthcare } from '../context/HealthcareContext';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const PatientRegistration = () => {
   const navigate = useNavigate();
   const { dispatch } = useHealthcare();
@@ -55,7 +57,7 @@ const PatientRegistration = () => {
 
   const sendOTP = async () => {
   try {
-    const res = await fetch('http://localhost:5000/send-phone-otp', {
+    const res = await fetch(`${API_URL}/send-phone-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone: formData.phoneNumber }),
@@ -74,7 +76,7 @@ const PatientRegistration = () => {
 
 const verifyOTP = async () => {
   try {
-    const res = await fetch('http://localhost:5000/verify-phone-otp', {
+    const res = await fetch(`${API_URL}/verify-phone-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone: formData.phoneNumber, otp }),
@@ -102,7 +104,7 @@ const verifyOTP = async () => {
   }
 
   try {
-    const response = await fetch('http://localhost:5000/register-patient', {
+    const response = await fetch(`${API_URL}/register-patient`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

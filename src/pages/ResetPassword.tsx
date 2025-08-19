@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ResetPassword: React.FC = () => {
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -22,7 +24,7 @@ const ResetPassword: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/doctor/reset-password", {
+      const response = await axios.post(`${API_URL}/api/doctor/reset-password`, {
         token,
         newPassword,
       });

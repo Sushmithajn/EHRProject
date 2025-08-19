@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Download, History, User, Calendar, Phone, CreditCard, MapPin, FileText } from 'lucide-react';
 import { useHealthcare } from '../context/HealthcareContext';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const PatientDetails = () => {
   const navigate = useNavigate();
   const { patientId } = useParams();

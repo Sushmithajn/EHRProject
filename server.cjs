@@ -35,7 +35,14 @@ const nodemailer = require('nodemailer');
 const path = require('path'); 
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+   origin: [
+    "http://localhost:5173",       // for local dev
+    "https://ehrproject-1.onrender.com" // for deployed frontend
+  ]
+}));
+
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json());

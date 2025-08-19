@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Lock, UserCheck, Eye, EyeOff } from 'lucide-react';
 import { useHealthcare } from '../context/HealthcareContext';
 
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+
 const DoctorLogin = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useHealthcare();
@@ -26,7 +31,7 @@ const DoctorLogin = () => {
   setError('');
 
   try {
-    const res = await fetch('http://localhost:5000/doctor-login', {
+    const res = await fetch(`${API_URL}/doctor-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
