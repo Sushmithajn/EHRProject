@@ -204,7 +204,7 @@ Please arrive 15 minutes before your scheduled time.`);
                 <button
                   type="button"
                   onClick={fetchPatientDetails}
-                  className="mt-7 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                  className="mt-10 px-2 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                 >
                   Fetch Details
                 </button>
