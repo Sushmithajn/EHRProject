@@ -19,14 +19,13 @@ const PatientRegistration = () => {
     aadharCard: '',
     rationCard: '',
     address: '',
-    password: '',          // ✅ NEW
+    password: '',
     confirmPassword: ''
   });
   const [photo, setPhoto] = useState<string | undefined>(undefined);
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
   const [isVerified, setIsVerified] = useState(false);
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -49,7 +48,6 @@ const PatientRegistration = () => {
   const handleCameraCapture = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      // In a real implementation, you would show a camera interface
       alert('Camera functionality would open here. For demo purposes, please use file upload.');
       stream.getTracks().forEach(track => track.stop());
     } catch (error) {
@@ -58,44 +56,42 @@ const PatientRegistration = () => {
   };
 
   const sendOTP = async () => {
-  try {
-    const res = await fetch(`${API_URL}/send-phone-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: formData.phoneNumber }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setOtpSent(true);
-      alert(data.message);
-    } else {
-      alert(data.message);
+    try {
+      const res = await fetch(`${API_URL}/send-phone-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formData.phoneNumber }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setOtpSent(true);
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert('Error sending OTP');
     }
-  } catch (err) {
-    alert('Error sending OTP');
-  }
-};
+  };
 
-const verifyOTP = async () => {
-  try {
-    const res = await fetch(`${API_URL}/verify-phone-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: formData.phoneNumber, otp }),
-    });
-    const data = await res.json();
-    if (data.verified) {
-      setIsVerified(true);
-      alert('Phone number verified successfully!');
-    } else {
-      alert('Invalid OTP');
+  const verifyOTP = async () => {
+    try {
+      const res = await fetch(`${API_URL}/verify-phone-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formData.phoneNumber, otp }),
+      });
+      const data = await res.json();
+      if (data.verified) {
+        setIsVerified(true);
+        alert('Phone number verified successfully!');
+      } else {
+        alert('Invalid OTP');
+      }
+    } catch (err) {
+      alert('Error verifying OTP');
     }
-  } catch (err) {
-    alert('Error verifying OTP');
-  }
-};
-
-
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,7 +113,7 @@ const verifyOTP = async () => {
         body: JSON.stringify({
           ...formData,
           password: formData.password, 
-          photo, // base64 image or URL
+          photo,
           registrationDate: new Date().toISOString()
         })
       });
@@ -128,7 +124,6 @@ const verifyOTP = async () => {
         alert(
           `✅ Patient registration successful! Your Patient ID: ${data.patientId} SMS sent to: ${formData.phoneNumber} Please save your Patient ID for future reference.`
         );
-
         navigate('/');
       } else {
         alert(`❌ ${data.message}`);
@@ -152,19 +147,20 @@ const verifyOTP = async () => {
           </button>
           <div>
             <h1 className="text-3xl font-bold text-gray-800">
-              Patient Registration
+              Patient Registration (ರೋಗಿಯ ನೋಂದಣಿ)
             </h1>
-            <p className="text-gray-600 mt-1">Register new patient details</p>
+            <p className="text-gray-600 mt-1">Register new patient details (ಹೊಸ ರೋಗಿಯ ವಿವರಗಳನ್ನು ನೋಂದಣಿ ಮಾಡಿ)</p>
           </div>
         </div>
 
         {/* Registration Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-8">
+
             {/* Personal Information Section */}
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-2 border-b">
-                Personal Information
+                Personal Information (ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ)
               </h3>
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -172,7 +168,7 @@ const verifyOTP = async () => {
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <User className="inline w-4 h-4 mr-2" />
-                    Full Name *
+                    Full Name (ಹೆಸರು) *
                   </label>
                   <input
                     type="text"
@@ -182,7 +178,7 @@ const verifyOTP = async () => {
                       if (/^[a-zA-Z\s]*$/.test(e.target.value)) handleInputChange(e);
                     }}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter full name"
+                    placeholder="Enter full name (ಹೆಸರು ನಮೂದಿಸಿ)"
                     required
                   />
                 </div>
@@ -191,7 +187,7 @@ const verifyOTP = async () => {
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Calendar className="inline w-4 h-4 mr-2" />
-                    Date of Birth *
+                    Date of Birth (ಜನ್ಮದಿನಾಂಕ) *
                   </label>
                   <input
                     type="date"
@@ -207,7 +203,7 @@ const verifyOTP = async () => {
                 {/* Sex */}
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Gender *
+                    Gender (ಲಿಂಗ) *
                   </label>
                   <select
                     name="sex"
@@ -216,10 +212,10 @@ const verifyOTP = async () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
                     required
                   >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    <option value="">Select Gender (ಲಿಂಗ ಆಯ್ಕೆಮಾಡಿ)</option>
+                    <option value="Male">Male (ಪುರುಷ)</option>
+                    <option value="Female">Female (ಹೆಣ್ಣು)</option>
+                    <option value="Other">Other (ಇತರೆ)</option>
                   </select>
                 </div>
 
@@ -227,7 +223,7 @@ const verifyOTP = async () => {
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Phone className="inline w-4 h-4 mr-2" />
-                    Phone Number *
+                    Phone Number (ಫೋನ್ ಸಂಖ್ಯೆ) *
                   </label>
                   <div className="flex space-x-2">
                     <input
@@ -237,9 +233,9 @@ const verifyOTP = async () => {
                       onChange={(e) => {
                         if (/^\d{0,10}$/.test(e.target.value)) handleInputChange(e);
                       }}
-                pattern="\d{10}"
+                      pattern="\d{10}"
                       className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                      placeholder="Enter 10-digit number"
+                      placeholder="Enter 10-digit number (10 ಅಂಕಿಯ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ)"
                       maxLength={10}
                       required
                     />
@@ -249,7 +245,7 @@ const verifyOTP = async () => {
                       disabled={formData.phoneNumber.length !== 10 || otpSent}
                       className="px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:bg-gray-400 transition-all duration-300"
                     >
-                      {otpSent ? 'Sent' : 'Send OTP'}
+                      {otpSent ? 'Sent (ಕಳುಹಿಸಲಾಗಿದೆ)' : 'Send OTP (OTP ಕಳುಹಿಸಿ)'}
                     </button>
                   </div>
                   
@@ -260,7 +256,7 @@ const verifyOTP = async () => {
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
                         className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                        placeholder="Enter OTP"
+                        placeholder="Enter OTP (OTP ನಮೂದಿಸಿ)"
                         maxLength={6}
                       />
                       <button
@@ -268,13 +264,13 @@ const verifyOTP = async () => {
                         onClick={verifyOTP}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300"
                       >
-                        Verify
+                        Verify (ಸತ್ಯಾಪಿಸಿ)
                       </button>
                     </div>
                   )}
                   
                   {isVerified && (
-                    <p className="text-green-600 text-sm mt-1">✓ Phone number verified</p>
+                    <p className="text-green-600 text-sm mt-1">✓ Phone number verified (ಫೋನ್ ಸಂಖ್ಯೆ ಸತ್ಯಾಪಿತ)</p>
                   )}
                 </div>
               </div>
@@ -283,13 +279,13 @@ const verifyOTP = async () => {
             {/* Family Information Section */}
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-2 border-b">
-                Family Information (Optional)
+                Family Information (ಕುಟುಂಬ ಮಾಹಿತಿ) (Optional)
               </h3>
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Father/Mother Name
+                    Father/Mother Name (ತಂದೆ/ತಾಯಿ ಹೆಸರು)
                   </label>
                   <input
                     type="text"
@@ -299,13 +295,13 @@ const verifyOTP = async () => {
                       if (/^[a-zA-Z\s]*$/.test(e.target.value)) handleInputChange(e);
                     }}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter father/mother name"
+                    placeholder="Enter father/mother name (ತಂದೆ/ತಾಯಿ ಹೆಸರು ನಮೂದಿಸಿ)"
                   />
                 </div>
 
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Husband/Wife Name
+                    Husband/Wife Name (ಗಂಡ/ಹೆಂಡತಿ ಹೆಸರು)
                   </label>
                   <input
                     type="text"
@@ -315,7 +311,7 @@ const verifyOTP = async () => {
                       if (/^[a-zA-Z\s]*$/.test(e.target.value)) handleInputChange(e);
                     }}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter husband/wife name"
+                    placeholder="Enter husband/wife name (ಗಂಡ/ಹೆಂಡತಿ ಹೆಸರು ನಮೂದಿಸಿ)"
                   />
                 </div>
               </div>
@@ -324,14 +320,14 @@ const verifyOTP = async () => {
             {/* Document Information Section */}
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-2 border-b">
-                Document Information
+                Document Information (ಡಾಕ್ಯುಮೆಂಟ್ ಮಾಹಿತಿ)
               </h3>
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <CreditCard className="inline w-4 h-4 mr-2" />
-                    PAN Card Number *
+                    PAN Card Number (PAN ಕಾರ್ಡ್ ಸಂಖ್ಯೆ) *
                   </label>
                   <input
                     type="text"
@@ -339,7 +335,7 @@ const verifyOTP = async () => {
                     value={formData.panCard}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter PAN card number"
+                    placeholder="Enter PAN card number (PAN ಕಾರ್ಡ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ)"
                     pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                     required
                   />
@@ -348,7 +344,7 @@ const verifyOTP = async () => {
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <CreditCard className="inline w-4 h-4 mr-2" />
-                    Aadhar Card Number *
+                    Aadhar Card Number (ಆಧಾರ್ ಕಾರ್ಡ್ ಸಂಖ್ಯೆ) *
                   </label>
                   <input
                     type="text"
@@ -356,7 +352,7 @@ const verifyOTP = async () => {
                     value={formData.aadharCard}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter Aadhar card number"
+                    placeholder="Enter Aadhar card number (ಆಧಾರ್ ಕಾರ್ಡ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ)"
                     pattern="[0-9]{12}"
                     maxLength={12}
                     required
@@ -365,7 +361,7 @@ const verifyOTP = async () => {
 
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ration Card Number (For BPL)
+                    Ration Card Number (ರೇಷನ್ ಕಾರ್ಡ್ ಸಂಖ್ಯೆ) (For BPL)
                   </label>
                   <input
                     type="text"
@@ -373,7 +369,7 @@ const verifyOTP = async () => {
                     value={formData.rationCard}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter ration card number"
+                    placeholder="Enter ration card number (ರೇಷನ್ ಕಾರ್ಡ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ)"
                   />
                 </div>
               </div>
@@ -382,13 +378,13 @@ const verifyOTP = async () => {
             {/* Address Section */}
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-2 border-b">
-                Address Information
+                Address Information (ವಿಳಾಸ ಮಾಹಿತಿ)
               </h3>
               
               <div className="group">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <MapPin className="inline w-4 h-4 mr-2" />
-                  Complete Address *
+                  Complete Address (ಸಂಪೂರ್ಣ ವಿಳಾಸ) *
                 </label>
                 <textarea
                   name="address"
@@ -396,7 +392,7 @@ const verifyOTP = async () => {
                   onChange={handleInputChange}
                   rows={3}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
-                  placeholder="Enter complete address"
+                  placeholder="Enter complete address (ಸಂಪೂರ್ಣ ವಿಳಾಸ ನಮೂದಿಸಿ)"
                   required
                 />
               </div>
@@ -405,49 +401,47 @@ const verifyOTP = async () => {
             {/* Account Credentials Section */}
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-2 border-b">
-                Account Credentials
+                Account Credentials (ಖಾತೆ ವಿವರಗಳು)
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Password *
-                    </label>
-                    <input
+                    Password (ಪಾಸ್‌ವರ್ಡ್) *
+                  </label>
+                  <input
                     type="password"
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    placeholder="Set a password"
+                    placeholder="Set a password (ಪಾಸ್‌ವರ್ಡ್ ನಿಗದಿಪಡಿಸಿ)"
                     minLength={6}
                     required
                   />
-                  
                 </div>
 
-    <div className="group">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Confirm Password *
-      </label>
-      <input
-        type="password"
-        name="confirmPassword"
-        value={formData.confirmPassword}
-        onChange={handleInputChange}
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-        placeholder="Re-enter password"
-        minLength={6}
-        required
-      />
-    </div>
-  </div>
-</div>
-
+                <div className="group">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirm Password (ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ) *
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    placeholder="Re-enter password (ಪಾಸ್‌ವರ್ಡ್ ಪುನಃ ನಮೂದಿಸಿ)"
+                    minLength={6}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Photo Upload Section */}
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-2 border-b">
-                Passport-size Photo
+                Passport-size Photo (ಪಾಸ್‌ಪೋರ್ಟ್ ಗಾತ್ರದ ಫೋಟೋ)
               </h3>
               
               <div className="flex items-center space-x-4">
@@ -460,7 +454,7 @@ const verifyOTP = async () => {
                 <div className="flex space-x-4">
                   <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center">
                     <Upload className="w-4 h-4 mr-2" />
-                    Upload Photo
+                    Upload Photo (ಫೋಟೋ ಅಪ್ಲೋಡ್)
                     <input
                       type="file"
                       accept="image/*"
@@ -475,7 +469,7 @@ const verifyOTP = async () => {
                     className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center"
                   >
                     <CameraIcon className="w-4 h-4 mr-2" />
-                    Take Photo
+                    Take Photo (ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಿ)
                   </button>
                 </div>
               </div>
@@ -486,7 +480,7 @@ const verifyOTP = async () => {
               type="submit"
               className="w-full bg-orange-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-orange-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
-              Register Patient
+              Register Patient (ರೋಗಿಯನ್ನು ನೋಂದಣಿ ಮಾಡಿ)
             </button>
           </form>
         </div>
