@@ -18,7 +18,9 @@ const PatientRegistration = () => {
     panCard: '',
     aadharCard: '',
     rationCard: '',
-    address: ''
+    address: '',
+    password: '',          // ✅ NEW
+    confirmPassword: ''
   });
   const [photo, setPhoto] = useState<string | undefined>(undefined);
   const [otpSent, setOtpSent] = useState(false);
@@ -96,39 +98,46 @@ const verifyOTP = async () => {
 
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!isVerified) {
-    alert('Please verify your phone number first.');
-    return;
-  }
-
-  try {
-    const response = await fetch(`${API_URL}/register-patient`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...formData,
-        photo, // base64 image or URL
-        registrationDate: new Date().toISOString()
-      })
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert(`✅ Patient registration successful! Your Patient ID: ${data.patientId} SMS sent to: ${formData.phoneNumber} Please save your Patient ID for future reference.`);
-
-      navigate('/');
-    } else {
-      alert(`❌ ${data.message}`);
+    if (!isVerified) {
+      alert('Please verify your phone number first.');
+      return;
     }
-  } catch (error) {
-    console.error('Registration failed:', error);
-    alert('Something went wrong. Please try again later.');
-  }
-};
 
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/register-patient`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          password: formData.password, 
+          photo, // base64 image or URL
+          registrationDate: new Date().toISOString()
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(
+          `✅ Patient registration successful! Your Patient ID: ${data.patientId} SMS sent to: ${formData.phoneNumber} Please save your Patient ID for future reference.`
+        );
+
+        navigate('/');
+      } else {
+        alert(`❌ ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Registration failed:', error);
+      alert('Something went wrong. Please try again later.');
+    }
+  };
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -142,7 +151,9 @@ const verifyOTP = async () => {
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Patient Registration</h1>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Patient Registration
+            </h1>
             <p className="text-gray-600 mt-1">Register new patient details</p>
           </div>
         </div>
@@ -390,6 +401,48 @@ const verifyOTP = async () => {
                 />
               </div>
             </div>
+
+            {/* Account Credentials Section */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-2 border-b">
+                Account Credentials
+              </h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="group">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Password *
+                    </label>
+                    <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    placeholder="Set a password"
+                    minLength={6}
+                    required
+                  />
+                  
+                </div>
+
+    <div className="group">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        Confirm Password *
+      </label>
+      <input
+        type="password"
+        name="confirmPassword"
+        value={formData.confirmPassword}
+        onChange={handleInputChange}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+        placeholder="Re-enter password"
+        minLength={6}
+        required
+      />
+    </div>
+  </div>
+</div>
+
 
             {/* Photo Upload Section */}
             <div>

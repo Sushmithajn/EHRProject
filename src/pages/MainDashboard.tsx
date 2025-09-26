@@ -9,11 +9,13 @@ import {
   Menu, 
   X,
   Home,
-  ArrowLeft
+  ArrowLeft,
+  Stethoscope
 } from 'lucide-react';
 import DoctorRegistration from './DoctorRegistration';
 import PatientRegistration from './PatientRegistration';
 import OPDForm from './OPDForm';
+import  PatientLogin from './PatientLogin';
 
 const MainDashboard = () => {
   const navigate = useNavigate();
@@ -31,8 +33,8 @@ const MainDashboard = () => {
     {
       id: 'doctor-registration',
       title: 'Doctor Registration',
-      icon: UserPlus,
-      color: 'bg-blue-600 hover:bg-blue-700',
+      icon:  Stethoscope,
+      color: 'bg-green-600 hover:bg-green-700',
       description: 'Register healthcare professionals'
     },
     {
@@ -55,6 +57,13 @@ const MainDashboard = () => {
       icon: Clipboard,
       color: 'bg-purple-600 hover:bg-purple-700',
       description: 'Outpatient department services'
+    },
+    {
+      id: 'patient-login',
+      title: 'Patient Login',
+      icon: UserPlus,
+      color: 'bg-orange-600 hover:bg-orange-700',
+      description: 'Access medical dashboard'
     }
   ];
 
@@ -73,6 +82,8 @@ const MainDashboard = () => {
       case 'doctor-login':
         handleDoctorLogin();
         return null;
+      case 'patient-login' :
+        return <PatientLogin />;
       default:
         return (
           <div className="p-4 md:p-8">

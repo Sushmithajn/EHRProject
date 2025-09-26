@@ -7,6 +7,10 @@ const Patient = require('./models/patient.cjs');
 const generatePatientId = require('./generatePatientId.cjs');
 const Opd = require('./models/opd.cjs');
 const Observation = require('./models/observation.cjs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+
 
 
 const { v4: uuidv4 } = require('uuid');
@@ -194,6 +198,9 @@ app.post('/doctor-login', async (req, res) => {
 
 // POST /register-patient
 // ✅ Updated POST /register-patient
+
+
+
 app.post('/register-patient', async (req, res) => {
   const {
     fullName,
@@ -206,6 +213,7 @@ app.post('/register-patient', async (req, res) => {
     aadharCard,
     rationCard,
     address,
+    password,
     photo
   } = req.body;
 
@@ -220,6 +228,7 @@ app.post('/register-patient', async (req, res) => {
       return res.status(400).json({ message: 'Patient already registered with this phone number' });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
     // ✅ Generate Patient ID
     const patientId = generatePatientId();
 
@@ -235,6 +244,7 @@ app.post('/register-patient', async (req, res) => {
       aadharCard,
       rationCard,
       address,
+      passwordHash: hashedPassword,
       photo,
       patientId // ✅ Save generated ID
     });
@@ -288,6 +298,39 @@ const normalizePhoneE164 = (raw) => {
   return raw; // fallback, might be malformed
 };
 
+
+app.post('/api/patients/login', async (req, res) => {
+  const { patientId, password } = req.body;
+
+  if (!patientId || !password) {
+    return res.status(400).json({ message: 'Patient ID and password are required' });
+  }
+
+  try {
+    const patient = await Patient.findOne({ patientId });
+    if (!patient) {
+      console.log('Patient not found for ID:', patientId);
+      return res.status(401).json({ message: 'Invalid Patient ID or Password' });
+    }
+
+    
+
+    const isMatch = await bcrypt.compare(password, patient.passwordHash);
+    if (!isMatch) {
+      console.log('Password mismatch for Patient ID:', patientId);
+      return res.status(401).json({ message: 'Invalid Patient ID or Password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log('Login successful for Patient ID:', patientId);
+
+    res.json({ token, patient });
+  } catch (err) {
+    console.error('Patient login error:', err);
+    res.status(500).json({ message: 'Server error during login' });
+  }
+});
 
 // POST /api/opd
 app.post('/api/opd', async (req, res) => {

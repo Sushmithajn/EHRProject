@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   UserCheck, Mail, Phone, Building,
-  CreditCard, User, CheckCircle
+  CreditCard, User, CheckCircle, Stethoscope
 } from 'lucide-react';
 import { useHealthcare } from '../context/HealthcareContext';
 
@@ -146,8 +146,8 @@ const DoctorRegistration = () => {
     <div className="p-8 max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-8 flex items-center">
-        <div className="bg-blue-600 p-3 rounded-lg mr-4">
-          <UserCheck className="w-6 h-6 text-white" />
+        <div className="bg-green-600 p-3 rounded-lg mr-4">
+          <Stethoscope className="h-8 w-8 text-white" />
         </div>
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Doctor Registration</h1>

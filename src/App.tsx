@@ -9,6 +9,8 @@ import PatientDetails from './pages/PatientDetails';
 import ObservationPrescription from './pages/ObservationPrescription';
 import DoctorForgotPassword from './pages/DoctorForgotPassword';
 import ResetPassword from "./pages/ResetPassword";
+import PatientLogin from './pages/PatientLogin';
+import PatientDashboardWrapper from './pages/PatientDashboardWrapper';
 
 
 
@@ -26,6 +28,8 @@ function App() {
             <Route path="/doctor-login" element={<DoctorLogin />} />
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
             <Route path="/patient-details/:patientId" element={<PatientDetails />} />
+            <Route path="/patient-login" element={<PatientLogin />} />
+            <Route path="/patient-dashboard" element={<PatientDashboardWrapper />} />
             <Route path="/observation-prescription/:patientId" element={<ObservationPrescription />} />
             <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />

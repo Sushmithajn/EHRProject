@@ -25,7 +25,13 @@ export interface Patient {
   rationCard?: string;
   photo?: string;
   address: string;
+  password: string;
   registrationDate: string;
+
+  allergies?: string[];       // keep if you want to track allergies
+  bloodType?: string;
+  email?: string;
+  emergencyContact?: { fullName: string; phone: string; relationship: string };
 }
 
 
@@ -64,7 +70,47 @@ interface HealthcareState {
   patients: Patient[];
   opdQueue: OPDEntry[];
   prescriptions: Prescription[];
+  currentPatient: Patient | null;
+  investigationReports: InvestigationReport[];
+  pharmacyReports: PharmacyReport[];
 }
+
+export interface InvestigationResult {
+  parameter: string;
+  value: string;
+  normalRange: string;
+  status: 'normal' | 'high' | 'low';
+}
+
+export interface InvestigationReport {
+  id: string;
+  patientId: string;
+  type: string;
+  date: string;
+  doctor: string;                  // added
+  status: 'pending' | 'completed' | 'review'; // match your filter
+  results: InvestigationResult[];  // added for table
+  notes?: string;                  // optional doctor's notes
+}
+
+
+export interface PharmacyReport {
+  id: string;
+  prescriptionId: string;
+  patientId: string;
+  medicationName: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+  prescribedBy: string;
+  prescribedDate: string;
+  dispensedDate?: string;
+  status: 'active' | 'completed' | 'cancelled' | 'pending';
+  refillsRemaining: number;
+  instructions?: string;
+}
+
+
 
 type HealthcareAction = 
   | { type: 'SET_CURRENT_DOCTOR'; payload: Doctor }
@@ -77,6 +123,10 @@ type HealthcareAction =
   | { type: 'LOAD_STATE'; payload: HealthcareState }
   | { type: "SET_PATIENTS"; payload: Patient[] }
   | { type: "SET_OPD_QUEUE"; payload: OPDEntry[] }
+  | { type: 'SET_INVESTIGATION_REPORTS'; payload: InvestigationReport[] }
+  | { type: 'SET_PHARMACY_REPORTS'; payload: PharmacyReport[] }
+  | { type: 'SET_CURRENT_PATIENT'; payload: Patient }
+
   
 
 const initialState: HealthcareState = {
@@ -84,25 +134,39 @@ const initialState: HealthcareState = {
   doctors: [],
   patients: [],
   opdQueue: [],
-  prescriptions: []
+  prescriptions: [],
+  currentPatient: null,               // added
+  investigationReports: [],           // added
+  pharmacyReports: []
 };
 
 const healthcareReducer = (state: HealthcareState, action: HealthcareAction): HealthcareState => {
   switch (action.type) {
     case 'SET_CURRENT_DOCTOR':
       return { ...state, currentDoctor: action.payload };
+
     case 'LOGOUT_DOCTOR':
       return { ...state, currentDoctor: null };
+
     case 'ADD_DOCTOR':
       return { ...state, doctors: [...state.doctors, action.payload] };
+
     case 'ADD_PATIENT':
-      return { ...state, patients: [...state.patients, action.payload] };
-    case 'SET_PATIENTS': // ✅ add this
+      return { 
+        ...state, 
+        patients: [...state.patients, action.payload],
+        currentPatient: action.payload,
+      };
+
+    case 'SET_PATIENTS':
       return { ...state, patients: action.payload };
+
     case 'ADD_OPD_ENTRY':
       return { ...state, opdQueue: [...state.opdQueue, action.payload] };
-    case 'SET_OPD_QUEUE': // ✅ add this
+
+    case 'SET_OPD_QUEUE':
       return { ...state, opdQueue: action.payload };
+
     case 'UPDATE_OPD_STATUS':
       return {
         ...state,
@@ -110,14 +174,27 @@ const healthcareReducer = (state: HealthcareState, action: HealthcareAction): He
           entry.id === action.payload.id ? { ...entry, status: action.payload.status } : entry
         )
       };
+
     case 'ADD_PRESCRIPTION':
       return { ...state, prescriptions: [...state.prescriptions, action.payload] };
+
     case 'LOAD_STATE':
       return action.payload;
+
+    case 'SET_INVESTIGATION_REPORTS':
+      return { ...state, investigationReports: action.payload };
+      
+    case 'SET_PHARMACY_REPORTS':
+      return { ...state, pharmacyReports: action.payload };
+
+    case 'SET_CURRENT_PATIENT':
+      return { ...state, currentPatient: action.payload };
+
     default:
       return state;
   }
 };
+
 
 
 const HealthcareContext = createContext<{

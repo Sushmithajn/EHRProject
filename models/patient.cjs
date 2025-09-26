@@ -12,6 +12,7 @@ const patientSchema = new mongoose.Schema({
   aadharCard: { type: String },
   rationCard: { type: String },
   address: { type: String },
+  passwordHash: { type: String, required: true },
   photo: { type: String }, // base64 string or URL
   registrationDate: { type: Date, default: Date.now }
 });
